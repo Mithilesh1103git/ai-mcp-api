@@ -7,11 +7,15 @@
 
 ### Main apps directory: `/applications`
 
-#### Step 1. First, run the MCP server with the command: `uvicorn --host=0.0.0.0 --port=8080 applications.mcp:app` (alternatively, you can also use command: `python3 src/mcp_server.py`)
+### Recommended Python version: 3.12
 
-#### Step 2: Secondly, run api server with the command: `uvicorn --host 0.0.0.0 --port 8081 applications.api:app`
+#### Step 1. Go to the directory where you have cloned the repository and run the following command: "pip install -r requirements.txt". This command installs all the necessary external library packages needed for our application. (You might want to activate your Python venv before running the command, if you are using one.)
 
-#### Step 3: You can call api with the following command: `curl -X GET http://<your-host>:8081/api/v1/get-llm-response` (for localhost, you can use the command: `curl -X GET http://localhost:8081/api/v1/get-llm-response`)
+#### Step 2. After the library packages are successfully installed, you can run the MCP server with the command: `uvicorn --host=0.0.0.0 --port=8080 applications.mcp:app` (alternatively, you can also use command: `python3 src/mcp_server.py`)
+
+#### Step 3: Once the MCP server is up and running, you can run api server with the command: `uvicorn --host 0.0.0.0 --port 8081 applications.api:app`
+
+#### Step 4: You can call api with the following command: `curl -X GET http://<your-host>:8081/api/v1/get-llm-response` (for localhost, you can use the command: `curl -X GET http://localhost:8081/api/v1/get-llm-response`)
 
 ## Notes:
 #### 1. In real world scenario, the LLM MCP server would be calling hosted models or paid models like OpenAI GPT. In this version, I am using a simple static response to all queries because hosting a model is not possible on a local system due to the size and resources required.
