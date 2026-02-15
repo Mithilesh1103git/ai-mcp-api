@@ -35,6 +35,10 @@
     curl -X GET http://localhost:8081/api/v1/get-llm-response
 #### Note: You can use the port which you have set during API server startup command in earlier step. By default, it is set to 8081.
 
+### Alternate method using docker compose:
+#### You can directly use docker compose to start both the servers. CURL command to call the api remains the same. You can use following docker compose command:
+    docker compose up --build --force-recreate
+
 ## Additional Notes:
 #### 1. In real world scenario, the LLM MCP server would be calling hosted models or paid models like OpenAI GPT. In this version, I am using a simple static response to all queries because hosting a model is not possible on a local system due to the size and resources required.
 #### 2. In real world scenario, API calls would be POST calls and not GET calls. The client would be sending a prompt message in a POST call as data, which will be forwarded by the API server to the MCP server for model outputs. I have simplified this with GET calls since I am using static responses and not real model responses.
