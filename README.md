@@ -30,10 +30,10 @@
 
 ### Step 4:
 #### You can call api with the following command: 
-    curl -X GET http://<your-host>:8081/api/v1/get-llm-response
+    curl -X GET http://<your-host>:<your-port>/api/v1/get-llm-response
 #### For localhost, you can use the command: 
     curl -X GET http://localhost:8081/api/v1/get-llm-response
-#### Note: Change the port to which you have set during API server startup command in earlier step. By default, it is set to 8081
+#### Note: You can use the port which you have set during API server startup command in earlier step. By default, it is set to 8081.
 
 ## Additional Notes:
 #### 1. In real world scenario, the LLM MCP server would be calling hosted models or paid models like OpenAI GPT. In this version, I am using a simple static response to all queries because hosting a model is not possible on a local system due to the size and resources required.
