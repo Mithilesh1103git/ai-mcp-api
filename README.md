@@ -26,7 +26,7 @@
 
 ### Step 3:
 #### Once the MCP server is up and running, you can start the API server with the following command: 
-    uvicorn --host 0.0.0.0 --port 8081 applications api:app
+    uvicorn --host 0.0.0.0 --port 8081 applications.api:app
 
 ### Step 4:
 #### You can call api with the following command: 
