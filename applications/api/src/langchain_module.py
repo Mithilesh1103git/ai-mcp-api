@@ -71,13 +71,10 @@ class FastMCPClientLLM(LLM):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> str:
-        return str(
-            asyncio.get_running_loop().run_until_complete(
-                call_mcp(
-                    endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt
-                )
-            )
+        response = asyncio.get_running_loop().run_until_complete(
+            call_mcp(endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt)
         )
+        return str(response)
 
     async def _acall(
         self,
@@ -86,11 +83,10 @@ class FastMCPClientLLM(LLM):
         run_manager: AsyncCallbackManagerForLLMRun | None = None,
         **kwargs: Any,
     ) -> str:
-        return str(
-            await call_mcp(
-                endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt
-            )
+        response = await call_mcp(
+            endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt
         )
+        return str(response)
 
 
 llm_add_timestamp = FastMCPClientLLM(

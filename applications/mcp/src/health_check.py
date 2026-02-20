@@ -13,6 +13,14 @@ MCP_SERVER_PORT = int(os.getenv("MCP_SERVER_PORT", "8080"))
 print(f"API host:port = {API_SERVER_HOST}:{API_SERVER_PORT} (mcp_healthcheck)")
 print(f"MCP host:port = {MCP_SERVER_HOST}:{MCP_SERVER_PORT} (mcp_healthcheck)")
 
+MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
+
+if MCP_ENDPOINT_TYPE == "standard_sse":
+    MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
+
+if MCP_ENDPOINT_TYPE == "standard_http":
+    MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/mcp"
+
 
 async def call_mcp(endpoint, tool_name, prompt):
     async with Client(endpoint) as client:
@@ -38,13 +46,6 @@ async def call_mcp(endpoint, tool_name, prompt):
 
 
 if __name__ == "__main__":
-    MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
-
-    if MCP_ENDPOINT_TYPE == "standard_sse":
-        MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
-
-    if MCP_ENDPOINT_TYPE == "standard_http":
-        MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/mcp"
 
     TARGET_TOOL_NAME: str = "echo"
     asyncio.run(
