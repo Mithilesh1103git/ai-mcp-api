@@ -31,8 +31,10 @@
 ### Step 4:
 #### You can call api with the following command: 
     curl -X GET http://<your-host>:<your-port>/api/v1/get-llm-response
-#### For localhost, you can use the command: 
+#### For localhost, you can use the following command: 
     curl -X GET http://localhost:8081/api/v1/get-llm-response
+#### For MS Windows localhost, you can use the following PowerShell command: 
+    Invoke-RestMethod -Method GET http://localhost:8081/api/v1/get-llm-response
 #### Note: You can use the port that you have set during the API server startup command in the earlier step. By default, it is set to 8081.
 
 ### Alternate method using Docker Compose:

@@ -1,7 +1,10 @@
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from applications.api.src.api_server import main_api_router
-from dotenv import load_dotenv
+from applications.api.src.middlewares.request_tracer import \
+    RequestTracerMiddleware
 
 load_dotenv(dotenv_path=r".env")
 
@@ -23,3 +26,5 @@ app.add_middleware(
 )
 
 app.include_router(main_api_router)
+
+app.add_middleware(RequestTracerMiddleware)

@@ -6,7 +6,7 @@ from fastmcp.client import Client
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
-MCP_ENDPOINT_TYPE = os.getenv("MCP_ENDPOINT_TYPE", "standard")
+MCP_ENDPOINT_TYPE = os.getenv("MCP_ENDPOINT_TYPE", "standard_http")
 MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST", "localhost")
 MCP_SERVER_PORT = int(os.getenv("MCP_SERVER_PORT", "8080"))
 
@@ -40,8 +40,12 @@ async def call_mcp(endpoint, tool_name, prompt):
 if __name__ == "__main__":
     MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
 
-    if MCP_ENDPOINT_TYPE == "uvicorn":
+    if MCP_ENDPOINT_TYPE == "standard_sse":
+        MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
+
+    if MCP_ENDPOINT_TYPE == "standard_http":
         MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/mcp"
+
     TARGET_TOOL_NAME: str = "echo"
     asyncio.run(
         call_mcp(

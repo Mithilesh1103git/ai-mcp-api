@@ -5,14 +5,15 @@ import os
 from typing import Any, List, Optional
 
 from fastmcp.client import Client
-from langchain_core.callbacks.manager import CallbackManagerForLLMRun
+from langchain_core.callbacks.manager import (AsyncCallbackManagerForLLMRun,
+                                              CallbackManagerForLLMRun)
 from langchain_core.language_models.llms import LLM
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
-MCP_ENDPOINT_TYPE = os.getenv("MCP_ENDPOINT_TYPE", "standard")
+MCP_ENDPOINT_TYPE = os.getenv("MCP_ENDPOINT_TYPE", "standard_http")
 MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST", "localhost")
 MCP_SERVER_PORT = int(os.getenv("MCP_SERVER_PORT", "8080"))
 
@@ -21,7 +22,10 @@ print(f"MCP host:port = {MCP_SERVER_HOST}:{MCP_SERVER_PORT} (langchain_module)")
 
 MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
 
-if MCP_ENDPOINT_TYPE=="uvicorn":
+if MCP_ENDPOINT_TYPE == "standard_sse":
+    MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
+
+if MCP_ENDPOINT_TYPE == "standard_http":
     MCP_ENDPOINT_URL = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/mcp"
 
 
@@ -67,19 +71,25 @@ class FastMCPClientLLM(LLM):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> str:
-        return asyncio.get_running_loop().run_until_complete(
-            call_mcp(endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt)
+        return str(
+            asyncio.get_running_loop().run_until_complete(
+                call_mcp(
+                    endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt
+                )
+            )
         )
 
     async def _acall(
         self,
         prompt: str,
         stop: Optional[List[str]] = None,
-        run_manager: Optional[CallbackManagerForLLMRun] = None,
+        run_manager: AsyncCallbackManagerForLLMRun | None = None,
         **kwargs: Any,
     ) -> str:
-        return await call_mcp(
-            endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt
+        return str(
+            await call_mcp(
+                endpoint=self.endpoint, tool_name=self.tool_name, prompt=prompt
+            )
         )
 
 
@@ -89,9 +99,7 @@ llm_add_timestamp = FastMCPClientLLM(
 )
 
 # Initialize your custom LLM
-main_llm = FastMCPClientLLM(
-    endpoint=MCP_ENDPOINT_URL, tool_name="echo"
-)
+main_llm = FastMCPClientLLM(endpoint=MCP_ENDPOINT_URL, tool_name="echo")
 
 # Define a prompt template
 prompt_template = PromptTemplate.from_template(

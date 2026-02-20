@@ -1,15 +1,18 @@
 import os
-from applications.mcp.src.mcp_server import mcp_app
+
 from dotenv import load_dotenv
+
+from applications.mcp.src.mcp_server import mcp_app
 
 load_dotenv(dotenv_path=r".env")
 
 print(os.getenv("MCP_SERVER_HOST"), os.getenv("MCP_SERVER_PORT"))
 
-MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST")
-MCP_SERVER_PORT = os.getenv("MCP_SERVER_PORT", "8080")
+MCP_ENDPOINT_TYPE = os.getenv("MCP_ENDPOINT_TYPE", "standard_http")
+MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST", "localhost")
+MCP_SERVER_PORT = int(os.getenv("MCP_SERVER_PORT", "8080"))
 
-app = mcp_app.http_app(path="/sse", transport="sse")
+app = mcp_app.http_app(path="/mcp", transport="http")
 
 # if __name__ == "__main__":
 #     mcp_app.run(transport="sse", host="0.0.0.0", port=int(MCP_SERVER_PORT))

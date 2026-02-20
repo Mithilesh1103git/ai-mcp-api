@@ -1,25 +1,27 @@
-import asyncio
 import json
 import os
+import sys
 import time
-from typing import Optional
+from pathlib import Path
 
-from fastapi import APIRouter, Header
+# Add the project root (2 levels up from this file) to sys.path
+project_root = str(Path(__file__).resolve().parent.parent.parent)
+if project_root not in sys.path:
+    sys.path.append(project_root)
+
 from fastapi.responses import StreamingResponse
 
-from applications.api.src.health_check import call_mcp
 from applications.api.src.langchain_module import chain
 
 API_SERVER_HOST = os.getenv("API_SERVER_HOST", "localhost")
 API_SERVER_PORT = int(os.getenv("API_SERVER_PORT", "8081"))
-MCP_ENDPOINT_TYPE = os.getenv("MCP_ENDPOINT_TYPE", "standard_http")
+MCP_ENDPOINT_TYPE = os.getenv("MCP_ENDPOINT_TYPE", "http")
 MCP_SERVER_HOST = os.getenv("MCP_SERVER_HOST", "localhost")
 MCP_SERVER_PORT = int(os.getenv("MCP_SERVER_PORT", "8080"))
 
-main_api_router = APIRouter(prefix="/api/v1")
+print(MCP_ENDPOINT_TYPE)
 
 
-@main_api_router.get("/get-llm-response")
 def get_llm_response():
     """
     Main function to get LLM model inference responses.
@@ -52,23 +54,5 @@ def get_llm_response():
     )
 
 
-@main_api_router.get("/mcp-healthcheck/{host}/{port}/{tool_name}")
-def mcp_healthcheck(
-    host: str, port: int, tool_name: str, authrorization: Optional[str] = Header(None)
-):
-    target_endpoint: str = f"http://{MCP_SERVER_HOST}:{MCP_SERVER_PORT}/sse"
-    target_tool_name: str = "echo"
-    if host and port:
-        target_endpoint: str = f"http://{host}:{port}/sse"
-        target_tool_name: str = tool_name
-    asyncio.run(
-        call_mcp(
-            endpoint=target_endpoint,
-            tool_name=target_tool_name,
-            prompt="test-echo-tool",
-        )
-    )
-
-
-# if __name__ == "__main__":
-#     uvicorn.run(app=app, port=API_SERVER_PORT)
+if __name__ == "__main__":
+    get_llm_response()
